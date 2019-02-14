@@ -2,6 +2,7 @@ const request = require('request')
 const cheerio = require('cheerio')
 const fs = require('fs')
 
+const FILE = 'carros.txt'
 const URL = 'https://www.seminovos.com.br/carro/Volkswagen/Saveiro-Cab-Simples/ano-2012-2015/cidade[]-2700/listaAcessorios[]-1-3?ordenarPor=4&registrosPagina=100&hidValue=true&hideFinancing=true'
 
 request(URL, function (err, res, body) {
@@ -23,8 +24,17 @@ request(URL, function (err, res, body) {
   })
 
   const listaCarros = carros.join('\n')
-  fs.appendFile('carros.txt', listaCarros, err => {
-    if (err) throw err
+
+  fs.exists(FILE, exists => {
+    if (exists) {
+      fs.unlink(FILE, err => {
+        if (err) throw err
+      })
+    } else {
+      fs.appendFile(FILE, listaCarros, err => {
+        if (err) throw err
+      })
+    }
   })
 
   console.log(carros)
