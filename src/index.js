@@ -24,18 +24,20 @@ request(URL, function (err, res, body) {
   })
 
   const listaCarros = carros.join('\n')
+  let qtdCarros = carros.length
 
   fs.exists(FILE, exists => {
     if (exists) {
       fs.unlink(FILE, err => {
         if (err) throw err
       })
-    } else {
-      fs.appendFile(FILE, listaCarros, err => {
-        if (err) throw err
-      })
     }
   })
 
-  console.log(carros)
+  fs.appendFile(FILE, listaCarros, err => {
+    if (err) throw err
+  })
+
+  console.log(`Foram encontrados ${qtdCarros} carros\n`)
+  console.log(listaCarros)
 })
